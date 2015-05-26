@@ -9,6 +9,7 @@ still deliberating a proper name. pjrc audio adapter compatible eurorack module.
 
 - stereo i/o  : 10 VPP; 44.1k / 16 bit (when using pjrc audio lib)
 - 2 x ADC, +/- 5V
+- 4 x pots
 - 2 x digital inputs
 - 2 x illum. tact switches
 
