@@ -48,7 +48,7 @@ void setup() {
   AudioMemory(60);
 
   wm8731.enable();
-  wm8731.inputSelect(audio_Input);
+  wm8731.inputSelect(audio_Input); // not doing anything
   wm8731.volume(0.5);
 
   SPI.setMOSI(7);
