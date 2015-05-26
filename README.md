@@ -12,6 +12,8 @@ still deliberating a proper name. pjrc audio adapter compatible eurorack module.
 - 4 x pots
 - 2 x digital inputs
 - 2 x illum. tact switches
+- micro SD card socket
+- ext. SPI flash (w25 / soic 8)
 
 
 ![My image](https://farm8.staticflickr.com/7615/17264546385_cec048eaee_z.jpg)
