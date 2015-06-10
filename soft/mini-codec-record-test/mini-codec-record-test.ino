@@ -1,4 +1,5 @@
-/* mini trash rec/play test; basically, the pjrc "recorder" example 
+/* mini trash rec/play test; basically, the pjrc "recorder" example ; needs modded control_wm8731.h/cpp files
+
 */
 
 
@@ -48,9 +49,9 @@ void setup() {
   AudioMemory(60);
 
   wm8731.enable();
-  wm8731.inputLevel(0.9f); // 0.0 - 1.0
   wm8731.inputSelect(audio_Input); // not doing anything
-  wm8731.volume(0.5);
+  wm8731.inputLevel(0.9f); // 0.0 - 1.0
+  wm8731.volume(0.7f);
 
   SPI.setMOSI(7);
   SPI.setSCK(14);
