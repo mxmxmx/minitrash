@@ -48,6 +48,7 @@ void setup() {
   AudioMemory(60);
 
   wm8731.enable();
+  wm8731.inputLevel(0.9f); // 0.0 - 1.0
   wm8731.inputSelect(audio_Input); // not doing anything
   wm8731.volume(0.5);
 
