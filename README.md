@@ -14,6 +14,7 @@ still deliberating a proper name. pjrc audio adapter compatible eurorack module.
 - 2 x illum. tact switches
 - micro SD card socket
 - ext. SPI flash (w25 / soic 8)
+- depth: ~ 40mm
 
 
 ![My image](https://farm8.staticflickr.com/7615/17264546385_cec048eaee_z.jpg)
