@@ -5,8 +5,9 @@
 
 6HP teensy 3.1 / wm8731 codec thingie.
 
-still deliberating a proper name. pjrc audio adapter compatible eurorack module. find the BOM [here](https://github.com/mxmxmx/minitrash/blob/master/hard/BOM.md)
+still deliberating a proper name. pjrc audio adapter compatible eurorack module. 
 
+find the BOM [here](https://github.com/mxmxmx/minitrash/blob/master/hard/BOM.md)
 preliminary build guide: [here](https://github.com/mxmxmx/minitrash/wiki/Building-it)
 
 - stereo i/o  : 10 VPP; 44.1k / 16 bit (when using pjrc audio lib)
