@@ -91,7 +91,7 @@ misc:
 
 - 1k-10k 9mm pots, vertical "tall trimmer" / song huei : 4 x 
 - jacks, thonkiconn : 8 x
-- tact switches, illuminated - Highly PB6149L-X (X being the colour) or e-switch TL1265 : 2 x
+- tact switches, illuminated - Highly PB6149L-X (X being the colour) or e-switch TL1265 : 2 x (†)
 - M3 spacer/standoff 10mm : 1 x
 - M3 screws, 5mm : 2 x
 -  5-pin single row precision ("machined" / "round") pin headers (male), RM 2.54mm : 2 x
@@ -101,3 +101,5 @@ notes:
 =================
 
 ( * ) if using a LM4040 for AREF, the CV range needs adjustment. for instance, when using a lm4040-3v0, the effective range reduces to 0 - 3v0. to compensate, use 110k resistors instead. the CV inputs are inverting op amps, so 33/110 * 10V = 3.0V; ditto for lm4040-2v5 -- in this case, 30k and 120k would get you there (30/120 * 10V = 2.5V)
+
+( † ) e.g. mouser # 612-TL1265YQSCLR (yellow), 612-TL1265BQSCLR (blue), 612-TL1265RQSCLR (red), 612-TL1265GQSCLR (green)
