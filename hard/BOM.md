@@ -91,7 +91,7 @@ misc:
 
 - 1k-10k 9mm pots, vertical "tall trimmer" / song huei : 4 x 
 - jacks, thonkiconn : 8 x
-- tact switches, illuminated - Highly PB614L or e-switch TL1265 : 2 x
+- tact switches, illuminated - Highly PB6149L-X (X being the colour) or e-switch TL1265 : 2 x
 - M3 spacer/standoff 10mm : 1 x
 - M3 screws, 5mm : 2 x
 -  5-pin single row precision ("machined" / "round") pin headers (male), RM 2.54mm : 2 x
