@@ -5,6 +5,8 @@
 
 6HP teensy 3.1 / wm8731 codec thingie.
 
+![My image](https://farm8.staticflickr.com/7615/17264546385_cec048eaee_z.jpg)
+
 still deliberating a proper name. pjrc audio adapter compatible eurorack module. 
 
 find the BOM [here](https://github.com/mxmxmx/minitrash/blob/master/hard/BOM.md)
@@ -20,4 +22,3 @@ find the BOM [here](https://github.com/mxmxmx/minitrash/blob/master/hard/BOM.md)
 - depth: ~ 40mm
 
 
-![My image](https://farm8.staticflickr.com/7615/17264546385_cec048eaee_z.jpg)
