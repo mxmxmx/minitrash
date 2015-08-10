@@ -18,12 +18,32 @@ AudioConnection          patchCord3(raw_file, 0, i2s_DAC, 0);
 AudioConnection          patchCord4(raw_file, 0, i2s_DAC, 1);
 AudioControlWM8731       wm8731;     
 
+
 #define BUT1 1
 #define BUT2 4
+
 #define LED1 2
 #define LED2 5
+
 #define CS_MEM 6
 #define CS_SD 10
+
+/*
+// remaining i/o, unused here :
+
+#define POT1 A10
+#define POT2 A11
+#define POT3 A7
+#define POT4 A6
+
+#define CV1  A1
+#define CV2  A2
+
+#define CLK1 0
+#define CLK2 3
+*/
+
+#define CS_MEM 6
 
 Bounce buttonRecord = Bounce(BUT1, 500);
 Bounce buttonPlay =   Bounce(BUT2, 500);
