@@ -18,7 +18,7 @@ find the BOM [here](https://github.com/mxmxmx/minitrash/blob/master/hard/BOM.md)
 - 2 x digital inputs
 - 2 x illum. tact switches
 - micro SD card socket
-- ext. SPI flash (w25 / soic 8)
+- ext. SPI flash (w25 / soic 8) or SPI SRAM (23LC1024)
 - depth: ~ 40mm
 
 
