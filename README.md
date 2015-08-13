@@ -18,6 +18,8 @@
 - find the BOM [here](https://github.com/mxmxmx/minitrash/blob/master/hard/BOM.md)
 / preliminary build guide: [here](https://github.com/mxmxmx/minitrash/wiki/Building-it)
 
+- two simple examples (recorder, delay using external 1Mbit SRAM) can be found [here](https://github.com/mxmxmx/minitrash/tree/master/soft)
+
 - pinout is identical to pjrc audio adapter; being a module, the thing also has:
 ```
 - 4x pots     < >   pins A10, A11, A7, A6
