@@ -3,7 +3,7 @@
 
 
 
-6HP teensy 3.1 / wm8731 codec thingie.
+###6HP teensy 3.1 / wm8731 codec thingie.
 
 ![My image](https://farm8.staticflickr.com/7615/17264546385_cec048eaee_z.jpg)
 
