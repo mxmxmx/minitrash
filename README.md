@@ -1,7 +1,4 @@
 # minitrash
-...
-
-
 
 ###6HP teensy 3.1 / wm8731 codec thingie.
 
@@ -23,7 +20,7 @@ find the BOM [here](https://github.com/mxmxmx/minitrash/blob/master/hard/BOM.md)
 
 - pinout is identical to pjrc audio adapter; being a module, the thing also has:
 
-- 2x CV in    < >   pins A1, A2 
+- 2x CV in    < >   pins A1, A2
 - 4x pots     < >   pins A10, A11, A7, A6
 - 2x clk in   < >   pins 0, 3
 - 2x switches < >   pins 1, 4
