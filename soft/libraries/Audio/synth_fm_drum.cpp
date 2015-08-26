@@ -201,17 +201,18 @@ void AudioSynthFMDrum::morph(uint16_t x, uint16_t y)
 
 void AudioSynthFMDrum::update(void)
 {
-	audio_block_t *block, *modinput;
 
-	modinput = receiveReadOnly();
+  audio_block_t *block, *modinput;
 
-	block = allocate();
+  modinput = receiveReadOnly();
 
-	if (!block) return;
+  block = allocate();
 
-	if (modinput) {
+  if (!block) return;
 
-			uint32_t am_envelope_increment = ComputeEnvelopeIncrement(am_decay_);
+  if (modinput) {
+
+      uint32_t am_envelope_increment = ComputeEnvelopeIncrement(am_decay_);
       uint32_t fm_envelope_increment = ComputeEnvelopeIncrement(fm_decay_);
       uint32_t phase = phase_;
       uint32_t fm_envelope_phase = fm_envelope_phase_;
