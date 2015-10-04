@@ -1,4 +1,8 @@
 /* mini trash rec/play test; basically, the pjrc "recorder" example ; needs modded wm8731 files (wm8731.h/cpp in audio lib)
+*
+*  top button / trig input = record, lower button / trig input = play
+*  pots/CV unused
+*  recording is mono (only left input is used); output is to L and R channel
 */
 
 
@@ -120,6 +124,7 @@ void loop() {
           stopPlaying();    
           digitalWriteFast(LED1, LOW);  
           digitalWriteFast(LED2, LOW); 
+          //startRecording(); 
     }
     else if (mode == REC) { 
           stopRecording();  
@@ -128,8 +133,8 @@ void loop() {
     }
   }
   // play button = lower button
-  // press to play file; press again to stop; when recording, pressing "play" stops recording
-  if (_CLK2 || buttonPlay.fallingEdge()) {
+  // press to play file; press again to stop; when recording, pressing "play" does nothing 
+  if (mode != REC && (_CLK2 || buttonPlay.fallingEdge())) {
     
     _CLK2 = false;
   
@@ -142,6 +147,7 @@ void loop() {
             stopRecording(); 
             digitalWriteFast(LED1, LOW); 
             digitalWriteFast(LED2, LOW); 
+            //startPlaying();  
     }
     else if (mode == PLAY) { 
              stopPlaying();   
