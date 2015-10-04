@@ -1,20 +1,18 @@
 /* mini trash rec/play test; basically, the pjrc "recorder" example ; needs modded wm8731 files (wm8731.h/cpp in audio lib)
 *
-*  top button / trig input = record, lower button / trig input = play
+*  top button / trig input = arm track + record, lower button / trig input = play
 *  pots/CV unused
 *  recording is mono (only left input is used); output is to L and R channel
 */
 
-
 #include <Bounce.h>
 #include <Audio.h>
-#include <i2c_t3.h>
+#include <i2c_t3.h> // #include <Wire.h>
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
 
 // Audio API: 
-
 AudioInputI2S            i2s_ADC;                   
 AudioRecordQueue         queue1;         
 AudioPlaySdRaw           raw_file; 
@@ -26,18 +24,20 @@ AudioConnection          ac2(fade1, 0, i2s_DAC, 0);
 AudioConnection          ac3(fade1, 0, i2s_DAC, 1);
 AudioControlWM8731       wm8731;     
 
+// buttons :
 #define BUT1 1
 #define BUT2 4
 #define LED1 2
 #define LED2 5
+// CS pins :
 #define CS_MEM 6
 #define CS_SD 10
-
+// trig inputs :
 #define CLK1 0
 #define CLK2 3
 
-/*
 // remaining i/o, unused here :
+/*
 #define POT1 A10
 #define POT2 A11
 #define POT3 A7
@@ -50,7 +50,7 @@ Bounce buttonRecord = Bounce(BUT1, 50);
 Bounce buttonPlay =   Bounce(BUT2, 50);
 
 // trigger inputs : 
-volatile uint8_t _CLK1, _CLK2;
+volatile uint16_t _CLK1, _CLK2;
 
 void CLK_ISR_1() { _CLK1 = true; }
 void CLK_ISR_2() { _CLK2 = true; }
@@ -58,28 +58,44 @@ void CLK_ISR_2() { _CLK2 = true; }
 enum MODE {
   STOP,
   REC,
-  PLAY  
+  PLAY, 
+  ARM  
 };
 
 int mode = 0;  // 0=stopped, 1=recording, 2=playing
 int wait = 0;
 uint32_t timestamp = 0;
 uint32_t file_length = 0;
-const uint16_t FADE = 100;
+const uint16_t FADE_OUT = 100;
+const uint16_t FADE_IN = 100;
 
 // The file where data is recorded
 File frec;
+
+// blink leds when track is ARMED
+
+IntervalTimer blink;
+volatile uint16_t _LED = false;
+const uint32_t BLINK_RATE = 100000;
+
+void _blink() {
+   
+    if (mode == REC) { 
+        digitalWriteFast(LED1, _LED);
+       _LED = ~_LED & 1u;
+    }
+}
 
 void setup() {
 
   // buttons 1,2  
   pinMode(BUT1, INPUT_PULLUP);
   pinMode(BUT2, INPUT_PULLUP);
-  pinMode(CLK1, INPUT_PULLUP); 
-  pinMode(CLK2, INPUT_PULLUP); 
   pinMode(LED1, OUTPUT); 
   pinMode(LED2, OUTPUT); 
-  
+  // 
+  pinMode(CLK1, INPUT_PULLUP); 
+  pinMode(CLK2, INPUT_PULLUP); 
   pinMode(CS_MEM, OUTPUT); 
   digitalWrite(CS_MEM, HIGH);
  
@@ -93,14 +109,19 @@ void setup() {
   SPI.setSCK(14);
   if (!(SD.begin(CS_SD))) {
 
+    uint8_t xxx = 0x0;
     while (1) {
       Serial.println("Unable to access the SD card");
       delay(500);
+      digitalWriteFast(LED1, xxx); 
+      digitalWriteFast(LED2, xxx);
+      xxx = ~xxx & 1u; 
     }
   }
   // trigger inputs 
   attachInterrupt(CLK1, CLK_ISR_1, FALLING);
   attachInterrupt(CLK2, CLK_ISR_2, FALLING);
+  blink.begin(_blink, BLINK_RATE);
 }
 
 
@@ -110,65 +131,116 @@ void loop() {
   buttonPlay.update();
 
   // rec button = top button
-  // press to record; press again to stop; when playing, pressing "rec" stops playing
+  // press to arm track; press again to record; press again to stop; when playing, pressing "rec" stops playing
   if (_CLK1 || buttonRecord.fallingEdge()) {
-
-    _CLK1 = false;
     
-    if (mode == STOP) { 
-          startRecording();  
-          digitalWriteFast(LED1, HIGH); 
-          digitalWriteFast(LED2, LOW); 
+    switch (mode) {
+      
+      case STOP: { 
+        
+        if (!_CLK1) { 
+            // only arm track manually
+            mode = ARM;
+            digitalWriteFast(LED1, HIGH);
+            digitalWriteFast(LED2, LOW);
+        }
+        break;
+      }
+      case REC: {
+        
+         stopRecording();
+         digitalWriteFast(LED1, LOW);
+         digitalWriteFast(LED2, LOW); 
+         mode = STOP;
+         break;
+      }
+      case PLAY: {
+        
+         if (!_CLK1) {
+           // only arm track manually
+           stopPlaying();
+           digitalWriteFast(LED1, HIGH);
+           digitalWriteFast(LED2, LOW); 
+           mode = ARM;
+         }
+         break;
+      } 
+      case ARM: {
+        
+         startRecording();  
+         digitalWriteFast(LED1, HIGH); 
+         digitalWriteFast(LED2, LOW);
+         mode = REC;
+         break;    
+      }
+      default: break;
+      
     }
-     else if (mode == PLAY) { 
-          stopPlaying();    
-          digitalWriteFast(LED1, LOW);  
-          digitalWriteFast(LED2, LOW); 
-          //startRecording(); 
-    }
-    else if (mode == REC) { 
-          stopRecording();  
-          digitalWriteFast(LED1, LOW);  
-          digitalWriteFast(LED2, LOW); 
-    }
+    _CLK1 = false;
   }
   // play button = lower button
   // press to play file; press again to stop; when recording, pressing "play" does nothing 
-  if (mode != REC && (_CLK2 || buttonPlay.fallingEdge())) {
-    
+  if (_CLK2 || buttonPlay.fallingEdge()) {
+        
+    switch (mode) {
+      
+      case STOP: {
+        
+        startPlaying();       
+        digitalWriteFast(LED1, LOW); 
+        digitalWriteFast(LED2, HIGH); 
+        mode = PLAY;
+        break;
+        
+       }
+      
+      case REC: {
+        
+        if (!_CLK2) {
+          // only stop recording manually
+          stopRecording();
+          digitalWriteFast(LED1, LOW);
+          digitalWriteFast(LED2, LOW); 
+          mode = STOP;
+        }
+        else mode = REC;
+        break;
+      }
+      
+      case PLAY: {
+        
+         stopPlaying();   
+         digitalWriteFast(LED1, LOW); 
+         digitalWriteFast(LED2, LOW); 
+         break;
+      }
+      
+      case ARM: {
+        
+        if (!_CLK2) {
+          // de-active manually
+          mode = STOP;
+        }
+        break; 
+      }
+      
+      default: break;
+    }
     _CLK2 = false;
-  
-    if (mode == STOP) { 
-            startPlaying();       
-            digitalWriteFast(LED1, LOW); 
-            digitalWriteFast(LED2, HIGH); 
-    }
-    else if (mode == REC) { 
-            stopRecording(); 
-            digitalWriteFast(LED1, LOW); 
-            digitalWriteFast(LED2, LOW); 
-            //startPlaying();  
-    }
-    else if (mode == PLAY) { 
-             stopPlaying();   
-             digitalWriteFast(LED1, LOW); 
-             digitalWriteFast(LED2, LOW); 
-    }
   }
 
-  if (mode == REC) continueRecording();
+    if (mode == REC) continueRecording();
 
-  if (mode == PLAY) {
-    
-    continuePlaying();
-    // fade out file when we reach near the end:
-    if (raw_file.positionMillis() > file_length - FADE) fade1.fadeOut(FADE);
-  }
+    if (mode == PLAY) {
+        continuePlaying();
+        // fade out file when we reach near the end:
+        if (raw_file.positionMillis() > file_length - FADE_OUT) fade1.fadeOut(FADE_OUT);
+    }
   
-  if (wait && millis() - timestamp > FADE) {
+    if (wait && millis() - timestamp > FADE_OUT) {
      wait = 0x0;
      raw_file.stop();
-  }
+   }
 }
 
 
@@ -185,11 +257,11 @@ void startRecording() {
   frec = SD.open("RECORD.RAW", FILE_WRITE);
   if (frec) {
     queue1.begin();
-    mode = REC;
   }
 }
 
 void continueRecording() {
+
   if (queue1.available() >= 2) {
     byte buffer[512];
     memcpy(buffer, queue1.readBuffer(), 256);
@@ -211,13 +283,12 @@ void stopRecording() {
     }
     frec.close();
   }
-  mode = STOP;
 }
 
 void startPlaying() {
-  fade1.fadeIn(50);
+  
+  fade1.fadeIn(FADE_IN);
   raw_file.play("RECORD.RAW");
-  mode = PLAY;
   file_length = raw_file.lengthMillis();
 }
 
@@ -230,8 +301,9 @@ void continuePlaying() {
 }
 
 void stopPlaying() {
+  
   if (mode == PLAY) {
-      fade1.fadeOut(FADE);
+      fade1.fadeOut(FADE_OUT);
       wait = 0x1;
       timestamp = millis();
       mode = STOP;
