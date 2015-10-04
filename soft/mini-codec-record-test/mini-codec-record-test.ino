@@ -80,7 +80,7 @@ const uint32_t BLINK_RATE = 100000;
 
 void _blink() {
    
-    if (mode == REC) { 
+    if (mode == ARM) { 
         digitalWriteFast(LED1, _LED);
        _LED = ~_LED & 1u;
     }
