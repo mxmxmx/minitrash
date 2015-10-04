@@ -80,7 +80,7 @@ const uint32_t BLINK_RATE = 100000;
 
 void _blink() {
    
-    if (mode == ARM) { 
+    if (mode == REC) { 
         digitalWriteFast(LED1, _LED);
        _LED = ~_LED & 1u;
     }
@@ -99,7 +99,7 @@ void setup() {
   pinMode(CS_MEM, OUTPUT); 
   digitalWrite(CS_MEM, HIGH);
  
-  AudioMemory(60);
+  AudioMemory(150);
 
   wm8731.enable(); // this enables both the ADC and DAC
   wm8731.inputLevel(0.7f); // input level
@@ -229,15 +229,15 @@ void loop() {
     _CLK2 = false;
   }
 
-    if (mode == REC) continueRecording();
+  if (mode == REC) continueRecording();
 
-    if (mode == PLAY) {
+  if (mode == PLAY) {
         continuePlaying();
         // fade out file when we reach near the end:
         if (raw_file.positionMillis() > file_length - FADE_OUT) fade1.fadeOut(FADE_OUT);
     }
   
-    if (wait && millis() - timestamp > FADE_OUT) {
+  if (wait && millis() - timestamp > FADE_OUT) {
      wait = 0x0;
      raw_file.stop();
    }
