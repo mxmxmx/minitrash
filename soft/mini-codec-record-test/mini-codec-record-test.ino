@@ -99,7 +99,7 @@ void setup() {
   pinMode(CS_MEM, OUTPUT); 
   digitalWrite(CS_MEM, HIGH);
  
-  AudioMemory(150);
+  AudioMemory(200);
 
   wm8731.enable(); // this enables both the ADC and DAC
   wm8731.inputLevel(0.7f); // input level
