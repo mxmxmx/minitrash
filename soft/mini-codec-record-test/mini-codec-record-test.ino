@@ -1,4 +1,4 @@
-/* mini trash rec/play test; basically, the pjrc "recorder" example ; needs modded wm8731.h/cpp files (in "audio lib")
+/* mini trash rec/play test; basically, the pjrc "recorder" example ; needs modded wm8731 files (wm8731.h/cpp in audio lib)
 */
 
 
@@ -29,6 +29,9 @@ AudioControlWM8731       wm8731;
 #define CS_MEM 6
 #define CS_SD 10
 
+#define CLK1 0
+#define CLK2 3
+
 /*
 // remaining i/o, unused here :
 #define POT1 A10
@@ -37,21 +40,22 @@ AudioControlWM8731       wm8731;
 #define POT4 A6
 #define CV1  A1
 #define CV2  A2
-#define CLK1 0
-#define CLK2 3
 */
 
 Bounce buttonRecord = Bounce(BUT1, 50);
 Bounce buttonPlay =   Bounce(BUT2, 50);
 
-const int audio_Input = AUDIO_INPUT_LINEIN;
+// trigger inputs : 
+volatile uint8_t _CLK1, _CLK2;
+
+void CLK_ISR_1() { _CLK1 = true; }
+void CLK_ISR_2() { _CLK2 = true; }
 
 enum MODE {
   STOP,
   REC,
   PLAY  
 };
-
 
 int mode = 0;  // 0=stopped, 1=recording, 2=playing
 int wait = 0;
@@ -67,6 +71,8 @@ void setup() {
   // buttons 1,2  
   pinMode(BUT1, INPUT_PULLUP);
   pinMode(BUT2, INPUT_PULLUP);
+  pinMode(CLK1, INPUT_PULLUP); 
+  pinMode(CLK2, INPUT_PULLUP); 
   pinMode(LED1, OUTPUT); 
   pinMode(LED2, OUTPUT); 
   
@@ -88,6 +94,9 @@ void setup() {
       delay(500);
     }
   }
+  // trigger inputs 
+  attachInterrupt(CLK1, CLK_ISR_1, FALLING);
+  attachInterrupt(CLK2, CLK_ISR_2, FALLING);
 }
 
 
@@ -98,8 +107,10 @@ void loop() {
 
   // rec button = top button
   // press to record; press again to stop; when playing, pressing "rec" stops playing
-  if (buttonRecord.fallingEdge()) {
+  if (_CLK1 || buttonRecord.fallingEdge()) {
 
+    _CLK1 = false;
+    
     if (mode == STOP) { 
           startRecording();  
           digitalWriteFast(LED1, HIGH); 
@@ -118,7 +129,9 @@ void loop() {
   }
   // play button = lower button
   // press to play file; press again to stop; when recording, pressing "play" stops recording
-  if (buttonPlay.fallingEdge()) {
+  if (_CLK2 || buttonPlay.fallingEdge()) {
+    
+    _CLK2 = false;
   
     if (mode == STOP) { 
             startPlaying();       
