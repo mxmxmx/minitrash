@@ -62,18 +62,17 @@ enum MODE {
   ARM  
 };
 
-int mode = 0;  // 0=stopped, 1=recording, 2=playing
+int mode = 0;  // 0=stopped, 1=recording, 2=playing, 3=armed
 int wait = 0;
 uint32_t timestamp = 0;
 uint32_t file_length = 0;
 const uint16_t FADE_OUT = 100;
 const uint16_t FADE_IN = 100;
 
-// The file where data is recorded
+// The file where data is recorded :
 File frec;
 
-// blink leds when track is ARMED
-
+// blink top led when track is recorded :
 IntervalTimer blink;
 volatile uint16_t _LED = false;
 const uint32_t BLINK_RATE = 100000;
@@ -131,7 +130,7 @@ void loop() {
   buttonPlay.update();
 
   // rec button = top button
-  // press to arm track; press again to record; press again to stop; when playing, pressing "rec" stops playing
+  // press to arm track; press again to record; press again to stop; when playing, pressing "rec" stops playing and arms track
   if (_CLK1 || buttonRecord.fallingEdge()) {
     
     switch (mode) {
@@ -233,7 +232,7 @@ void loop() {
 
   if (mode == PLAY) {
         continuePlaying();
-        // fade out file when we reach near the end:
+        // fade out file when we reach near the end :
         if (raw_file.positionMillis() > file_length - FADE_OUT) fade1.fadeOut(FADE_OUT);
     }
   
