@@ -2,7 +2,7 @@
 
 ###6HP teensy 3.1 / wm8731 codec thingie.
 
-![My image](https://farm8.staticflickr.com/7615/17264546385_cec048eaee_z.jpg)
+![My image](https://c2.staticflickr.com/2/1634/24267153383_4128cd6da1_c.jpg)
 
 - still deliberating a proper name. pjrc audio adapter compatible eurorack module. 
 ```
