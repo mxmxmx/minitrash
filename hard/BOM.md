@@ -28,8 +28,9 @@ resistors (0603):
 - 4k7  : 2 x
 - 5k6  : 2 x
 - 27k  : 4 x
+- 30k  : 1 x (††)
 - 33k  : 2 x (*)
-- 47k  : 2 x
+- 47k  : 3 x (††)
 - 100k : 6 x (*)
 
 caps, SMD:
@@ -103,3 +104,5 @@ notes:
 ( * ) if using a LM4040 for AREF, the CV range needs adjustment. for instance, when using a lm4040-3v0, the effective range reduces to 0 - 3v0. to compensate, use 110k resistors instead. the CV inputs are inverting op amps, so 33/110 * 10V = 3.0V; ditto for lm4040-2v5 -- in this case, 30k and 120k would get you there (30/120 * 10V = 2.5V)
 
 ( † ) e.g. mouser # 612-TL1265YQSCLR (yellow), 612-TL1265BQSCLR (blue), 612-TL1265RQSCLR (red), 612-TL1265GQSCLR (green)
+
+(††) used for voltage divider / V_bias (NB: labelled 10k* on the silkscreen -- use 47k/30k instead (see build doc))
