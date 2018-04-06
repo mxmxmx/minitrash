@@ -1,6 +1,6 @@
 # minitrash
 
-###6HP teensy 3.1 / wm8731 codec thingie.
+### 6HP teensy 3.1 / wm8731 codec thingie.
 
 ![My image](https://c2.staticflickr.com/2/1634/24267153383_4128cd6da1_c.jpg)
 
